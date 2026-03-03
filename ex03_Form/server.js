@@ -18,6 +18,8 @@
 // 4. express의 메인이 될수 있는 js 파일 생성
 // => server.js / app.js 이름으로 사용!
 
+
+
 const express = require('express')
 // 모듈 불러오는 작업
 
@@ -30,20 +32,46 @@ const path = require('path')
 // 정적인 파일에 이미지를 추가하여 클라이언트에게 응답을 위한 미들웨어 설정!
 app.use(express.static(__dirname + '/public'))
 
+// 4. post의 데이터를 꺼내와 해석하기 위한 미들웨어 추가!
+app.use(express.urlencoded({extended:true}))
+
 // 기본 요청('/')에 대한 과정 설정하기
 // localhost : 3000/
-app.get('/', (req, res)=> {
+app.get('/login', (req, res)=> {
     console.log('서버 접근 완료')
     // 서버 요청에 대한 응답을 연결해보기! => 제대로된 응답을 위해선 절대경로를 사용해야한다!
     // => html파일을 생성해서 작업!
     // join : 경로를 안전하게 조합하기 위한 기능
     // __dirname : 현재 내가 있는 파일의 위치 의미
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+    res.sendFile(__dirname +  '/public/login.html');
 })
 
 // 2. get방식의 요청을 받을수 있는 구조
+
 app.get('/getkeyword',(req, res)=>{
-    console.log('사용자가 검색을 요청했습니다!', req.query)
+    console.log('사용자가 검색을 요청했습니다!', req.query.keyword)
+
+    // 웹 브라우저에 응답 연결하기
+    res.writeHead(200, {'Content-Type':'text/html;charset=utf-8'})
+    res.write('<p>' + req.query.keyword + '를 검색했습니다. </p>')
+    res.end()
+})
+
+// 3. post방식의 요청을 받을수 있는 구조 생성! => 데이터를 가져오기 위한 미들웨어를 추가해야 한다!!
+app.post('/postLogin', (req, res)=> {
+    console.log('로그인 시도', req.body)
+
+    // 로그인 로직을 만들어 응답해 보자!
+    // public 폴더에 loginS.html / loginF.html
+    // admin/1234으로 로그인 성공시 => loginS.html로 응답
+    // 로그인 정보가 틀렸을 경우 => loginF.html 로 응답
+
+    // req.body.id , req.body.pw
+    if (req.body.id === "admin" && req.body.pw === "1234"){
+    res.sendFile(path.join(__dirname, 'public', 'loginS.html'))
+}else{res.sendFile(path.join(__dirname, 'public', 'loginF.html'))
+
+} 
 })
 
 // 컴퓨터의 기본 포트번호를 확인해서 연결하는 방법
