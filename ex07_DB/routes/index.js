@@ -4,7 +4,12 @@ const router = express.Router()
 // 메인페이지
 router.get('/', (req, res)=>{
     console.log('서버 접속')
-    res.render('main')
+    // 로그인 상태라면 로그인 정보를 view에 보내주겠다.
+    if(req.session.isLogined){
+        res.render('main',{userId : req.session.userId})
+    } else {
+        res.render('main')
+    }
 })
 
 // 회원가입 페이지
