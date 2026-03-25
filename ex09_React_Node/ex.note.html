@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>은혜의 리액트 쇼핑몰</title>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .product-card { background: white; border-radius: 10px; padding: 15px; margin: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 200px; text-align: center; }
+        .product-list { display: flex; flex-wrap: wrap; justify-content: center; }
+        button { background-color: #2ecc71; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #27ae60; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // [부품] 상품 하나하나를 만드는 틀
+        function Product({ name, price, img }) {
+            return (
+                <div className="product-card">
+                    <h2>{img}</h2>
+                    <h3>{name}</h3>
+                    <p>가격: {price.toLocaleString()}원</p>
+                    <button onClick={() => alert(name + "을 장바구니에 담았습니다!")}>담기</button>
+                </div>
+            );
+        }
+
+        // [전체 화면] 부품들을 조립하는 사장님
+        function App() {
+            // 수집한 데이터처럼 리스트를 만들어봐요
+            const [items] = React.useState([
+                { id: 1, name: "싱싱한 배추", price: 5500, img: "🥬" },
+                { id: 2, name: "꿀맛 사과", price: 3000, img: "🍎" },
+                { id: 3, name: "단단한 무", price: 1500, img: "🎍" },
+                { id: 4, name: "매운 고추", price: 2500, img: "🌶️" }
+            ]);
+
+            return (
+                <div>
+                    <h1 style={{textAlign: 'center'}}>🛒 은혜네 농산물 마켓</h1>
+                    <div className="product-list">
+                        {/* 반복문으로 상품들을 촤르륵 뿌려줍니다! */}
+                        {items.map(item => (
+                            <Product key={item.id} name={item.name} price={item.price} img={item.img} />
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // 5. 도화지(root)에 사장님(App)이 그린 그림을 붙여넣기
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
